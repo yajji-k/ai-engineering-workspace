@@ -2,52 +2,62 @@ import time, asyncio
 from app.application.chat.chat_service import ChatService
 from app.application.extraction.extraction_service import ExtractionService
 from langchain_core.messages import HumanMessage, AIMessage
+from app.domain.conversation import Conversation
+from app.infrastructure.conversation import InMemoryConversationRepository
+from app.application.conversation import ConversationService
 
 def test_chat() -> None:
-    service = ChatService()
+    conv_service = ConversationService()
+    conversation = Conversation()
 
-    messages = []
-
-    while True:
-        user_input = input("User Chat > ")
-        messages.append(HumanMessage(content = user_input))
-        
-        response = service.chat(messages=messages)
-
-        print("\n===== Response =====\n")
-        print(response)
-        print("\n====================\n")
-        
-        messages.append(AIMessage(content=response))
-
-async def test_achat() -> None:
-    service = ChatService()
-
-    messages = []
-
-    while True:
-        user_input = input("User Chat > ")
-        messages.append(HumanMessage(content = user_input))
-        
-        response = await service.achat(messages=messages)
-
-        print("\n===== Response =====\n")
-        print(response)
-        print("\n====================\n")
-        
-        messages.append(AIMessage(content=response))
-        
-def test_stream() -> None:
-    service = ChatService()
-    messages = []
+    respository = InMemoryConversationRepository()
+    respository.save(conversation)
     
     while True:
         user_input = input("User Chat > ")
-        messages.append(HumanMessage(content = user_input))
+        
+        response = conv_service.chat(
+            conversation=conversation,
+            user_input=user_input
+        )
+
+        print("\n===== Response =====\n")
+        print(response)
+        print("\n====================\n")
+
+async def test_achat() -> None:
+    conv_service = ConversationService()
+    conversation = Conversation()
+
+    respository = InMemoryConversationRepository()
+    respository.save(conversation)
+        
+    while True:
+        user_input = input("User Chat > ")
+        response = await conv_service.achat(
+            conversation=conversation,
+            user_input=user_input
+        )
+
+        print("\n===== Response =====\n")
+        print(response)
+        print("\n====================\n")
+        
+def test_stream() -> None:
+    service = ChatService()
+    
+    repository = InMemoryConversationRepository()
+    
+    conversation = Conversation()
+    repository.save(conversation)
+        
+    while True:
+        user_input = input("User Chat > ")
+        conversation.add_message(HumanMessage(content = user_input))
         
         response = ""
 
-        for chunk in service.stream(messages=messages):
+        for chunk in service.stream(messages=conversation.messages):
             # print(chunk.content, end = "", flush=True)
             response += chunk.content
             
@@ -57,19 +67,23 @@ def test_stream() -> None:
             
         print("\n\n====================\n")
 
-        messages.append(AIMessage(content=response))
+        conversation.add_message(AIMessage(content=response))
 
 async def test_astream() -> None:
     service = ChatService()
-    messages = []
+
+    repository = InMemoryConversationRepository()
+    
+    conversation = Conversation()
+    repository.save(conversation)
     
     while True:
         user_input = input("User Chat > ")
-        messages.append(HumanMessage(content = user_input))
+        conversation.add_message(HumanMessage(content = user_input))
         
         response = ""
 
-        async for chunk in service.astream(messages=messages):
+        async for chunk in service.astream(messages=conversation.messages):
             # print(chunk.content, end = "", flush=True)
             response += chunk.content
             
@@ -79,7 +93,7 @@ async def test_astream() -> None:
                 
         print("\n\n====================\n")
 
-        messages.append(AIMessage(content=response))
+        conversation.add_message(AIMessage(content=response))
         
 def test_extraction():
     service = ExtractionService()
@@ -102,15 +116,6 @@ async def main() -> None:
         test_astream()
     elif mode == "extract":
         test_extraction()
-
-    # Future experiments:
-    # test_streaming()
-    # test_prompt_template()
-    # test_structured_output()
-    # test_tools()
-    # test_rag()
-    # test_agent()
-    # test_langgraph()
 
 
 if __name__ == "__main__":
