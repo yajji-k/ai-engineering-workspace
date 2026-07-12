@@ -11,3 +11,5 @@ wheels/
 
 # env config
 .env
+
+experiment/

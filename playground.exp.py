@@ -1,10 +1,10 @@
 import time, asyncio
-from app.application.chat.chat_service import ChatService
-from app.application.extraction.extraction_service import ExtractionService
+from app.experiment.application.chat.chat_service import ChatService
+from app.experiment.application.extraction.extraction_service import ExtractionService
 from langchain_core.messages import HumanMessage, AIMessage
-from app.domain.conversation import Conversation
-from app.infrastructure.conversation import InMemoryConversationRepository
-from app.application.conversation import ConversationService
+from app.experiment.conversation import Conversation
+from app.experiment.infrastructure.conversation import InMemoryConversationRepository
+from app.experiment.application.conversation import ConversationService
 
 def test_chat() -> None:
     conv_service = ConversationService()
