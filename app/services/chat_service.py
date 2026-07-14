@@ -1,8 +1,8 @@
 from app.prompts.support_agent import SEARCH_PROMPT
-from .support.tavity_search_service import TavitySearchService
+from .support.tavily_search_service import TavilySearchService
 from app.llm.provider import create_ollama_model
 
-search_service = TavitySearchService()
+search_service = TavilySearchService()
 
 class ChatService:
     def __init__(self):

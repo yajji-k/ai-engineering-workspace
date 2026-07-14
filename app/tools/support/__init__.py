@@ -1,5 +1,5 @@
-from .search import search_tavity
+from .search import search_tavily
 
 __all__ = [
-    "search_tavity"
+    "search_tavily"
 ]

@@ -7,7 +7,7 @@ settings = get_settings()
 chat_service = ChatService()
 
 @tool
-def search_tavity(user_query: str):
+def search_tavily(user_query: str):
     """
         pass the user_query as it is to perform the service
     """
