@@ -1,14 +1,10 @@
+# app/tools/tavily/search.py
 from langchain_core.tools import tool
-from app.services.chat_service import ChatService
-from app.core.config import get_settings
+from app.services.support.search_service import SearchService
 
-settings = get_settings()
-
-chat_service = ChatService()
+search_service = SearchService()
 
 @tool
-def search_tavily(user_query: str):
-    """
-        pass the user_query as it is to perform the service
-    """
-    return chat_service.search(user_query=user_query)
+def tavily_web_search(query: str) -> dict:
+    """Search the web using Tavily for up-to-date information."""
+    return search_service.search(query)
