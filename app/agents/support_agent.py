@@ -1,14 +1,14 @@
 from langchain.agents import create_agent
-from langchain_core.runnables import Runnable
+from app.llm.provider import create_ollama_model
+from app.tools.support import search_tavity
 
-from app.llm.provider import create_gemini_model
-
-from app.prompts import SUPPORT_AGENT_SYSTEM_PROMPT
-
-def create_support_agent() -> Runnable:
-    gemini_model = create_gemini_model()
-    
-    return create_agent(
-        model=gemini_model,
-        system_prompt=SUPPORT_AGENT_SYSTEM_PROMPT
+def create_support_agent():
+    agent = create_agent(
+        model=create_ollama_model(),
+        tools=[search_tavity],
+        system_prompt="""
+            when asked any query from the agent put the user_query as it is to the search_tavity tool and then use the response to generate a response
+        """
     )
+    
+    return agent

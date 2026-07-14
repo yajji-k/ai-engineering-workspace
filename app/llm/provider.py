@@ -1,13 +1,13 @@
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_ollama import ChatOllama
 
 from app.core.config import get_settings
 
 settings = get_settings()
 
 
-def create_gemini_model() -> ChatGoogleGenerativeAI:
-    return ChatGoogleGenerativeAI(
-        model=settings.google_model,
-        google_api_key=settings.google_api_key,
+def create_ollama_model() -> ChatOllama:
+    return ChatOllama(
+        model=settings.ollama_model,
+        base_url=settings.ollama_base_url,
         temperature=0,
     )

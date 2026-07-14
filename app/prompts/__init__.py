@@ -1,5 +1,5 @@
-from .support_agent import SUPPORT_AGENT_SYSTEM_PROMPT
+from .support_agent import SEARCH_PROMPT
 
 __all__ = [
-    "SUPPORT_AGENT_SYSTEM_PROMPT"
+    "SEARCH_PROMPT"
 ]

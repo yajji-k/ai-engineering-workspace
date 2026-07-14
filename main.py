@@ -2,7 +2,6 @@ from fastapi import FastAPI
 
 from app.api import chat_router
 
-
 def create_app() -> FastAPI:
     app = FastAPI(
         title="AI Engineering Workspace",

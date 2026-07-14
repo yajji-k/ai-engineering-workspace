@@ -1,11 +1,26 @@
-SUPPORT_AGENT_SYSTEM_PROMPT = """
-You are a helpful AI assistant.
+from langchain_core.prompts import ChatPromptTemplate
 
-Your responsibilities are:
+SEARCH_PROMPT = ChatPromptTemplate.from_messages([
+    (
+        "system",
+        """
+You are a support assistant.
 
-- Answer questions accurately.
-- Be concise unless the user requests a detailed explanation.
-- If tools are available, use them whenever they provide a more reliable answer.
-- If you don't know something, say so instead of making it up.
-- Format responses using Markdown.
+Answer ONLY using the search results.
+
+If the search results don't contain the answer, say so.
+
+Keep answers concise.
 """
+    ),
+    (
+        "human",
+        """
+Question:
+{question}
+
+Search Results:
+{search_results}
+"""
+    )
+])

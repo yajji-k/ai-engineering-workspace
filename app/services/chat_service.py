@@ -1,16 +1,27 @@
-from app.agents.support_agent import create_support_agent
-from langchain_core.messages import HumanMessage
+from app.prompts.support_agent import SEARCH_PROMPT
+from .support.tavity_search_service import TavitySearchService
+from app.llm.provider import create_ollama_model
 
+search_service = TavitySearchService()
 
 class ChatService:
     def __init__(self):
-        self._agent = create_support_agent()
-    
-    def chat(self, message: str):
-        return self._agent.invoke(
+        self._model = create_ollama_model()
+        self._chain = SEARCH_PROMPT | self._model
+
+    def search(self, user_query: str):
+
+        search_results = search_service.tavily_search.invoke(
+            {"query": user_query}
+        )
+
+        response = self._chain.invoke(
             {
-                "messages": [
-                    HumanMessage(content=message)
-                ]
+                "question": user_query,
+                "search_results": search_results
             }
         )
+        
+        print(response)
+
+        return response.content
